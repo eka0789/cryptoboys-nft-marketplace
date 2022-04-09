@@ -1,62 +1,62 @@
 import React, { useState, useEffect } from "react";
-import CryptoBoyNFTImage from "../CryptoBoyNFTImage/CryptoBoyNFTImage";
-import CryptoBoyNFTDetails from "../CryptoBoyNFTDetails/CryptoBoyNFTDetails";
+import CryptoNftNFTImage from "../CryptoNftNFTImage/CryptoNftNFTImage";
+import CryptoNftNFTDetails from "../CryptoNftNFTDetails/CryptoNftNFTDetails";
 import Loading from "../Loading/Loading";
 
-const AllCryptoBoys = ({
-  cryptoBoys,
+const AllCryptoNfts = ({
+  cryptoNfts,
   accountAddress,
   totalTokensMinted,
   changeTokenPrice,
   toggleForSale,
-  buyCryptoBoy,
+  buyCryptoNft,
 }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (cryptoBoys.length !== 0) {
-      if (cryptoBoys[0].metaData !== undefined) {
+    if (cryptoNfts.length !== 0) {
+      if (cryptoNfts[0].metaData !== undefined) {
         setLoading(loading);
       } else {
         setLoading(false);
       }
     }
-  }, [cryptoBoys]);
+  }, [cryptoNfts]);
 
   return (
     <div>
       <div className="card mt-1">
         <div className="card-body align-items-center d-flex justify-content-center">
           <h5>
-            Total No. of CryptoBoy's Minted On The Platform :{" "}
+            Total No. of Trial Test Minted On The Platform :{" "}
             {totalTokensMinted}
           </h5>
         </div>
       </div>
       <div className="d-flex flex-wrap mb-2">
-        {cryptoBoys.map((cryptoboy) => {
+        {cryptoNfts.map((cryptoNft) => {
           return (
             <div
-              key={cryptoboy.tokenId.toNumber()}
+              key={cryptoNft.tokenId.toNumber()}
               className="w-50 p-4 mt-1 border"
             >
               {!loading ? (
-                <CryptoBoyNFTImage
+                <CryptoNftNFTImage
                   colors={
-                    cryptoboy.metaData !== undefined
-                      ? cryptoboy.metaData.metaData.colors
+                    cryptoNft.metaData !== undefined
+                      ? cryptoNft.metaData.metaData.colors
                       : ""
                   }
                 />
               ) : (
                 <Loading />
               )}
-              <CryptoBoyNFTDetails
-                cryptoboy={cryptoboy}
+              <CryptoNftNFTDetails
+                cryptoNft={cryptoNft}
                 accountAddress={accountAddress}
                 changeTokenPrice={changeTokenPrice}
                 toggleForSale={toggleForSale}
-                buyCryptoBoy={buyCryptoBoy}
+                buyCryptoNft={buyCryptoNft}
               />
             </div>
           );
@@ -66,4 +66,4 @@ const AllCryptoBoys = ({
   );
 };
 
-export default AllCryptoBoys;
+export default AllCryptoNfts;

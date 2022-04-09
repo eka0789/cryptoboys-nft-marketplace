@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import CryptoBoyNFTImage from "../CryptoBoyNFTImage/CryptoBoyNFTImage";
+import CryptoNftNFTImage from "../CryptoNftNFTImage/CryptoNftNFTImage";
 
 // source: https://stackoverflow.com/questions/1484506/random-color-generator
 function getRandomColor() {
@@ -34,8 +34,8 @@ class FormAndPreview extends Component {
           bodyBorderColor: getRandomColor(),
         },
       ],
-      cryptoBoyName: "",
-      cryptoBoyPrice: "",
+      cryptoNftName: "",
+      cryptoNftPrice: "",
     };
   }
 
@@ -47,8 +47,8 @@ class FormAndPreview extends Component {
     e.preventDefault();
     this.props.mintMyNFT(
       this.state.userSelectedColors[0],
-      this.state.cryptoBoyName,
-      this.state.cryptoBoyPrice
+      this.state.cryptoNftName,
+      this.state.cryptoNftPrice
     );
   };
 
@@ -57,7 +57,7 @@ class FormAndPreview extends Component {
       <div>
         <div className="card mt-1">
           <div className="card-body align-items-center d-flex justify-content-center">
-            <h5>Color Your Crypto Boy As You Want It To be!</h5>
+            <h5>Color Your Trial Test As You Want It To be!</h5>
           </div>
         </div>
         <form onSubmit={this.callMintMyNFTFromApp} className="pt-4 mt-1">
@@ -251,7 +251,7 @@ class FormAndPreview extends Component {
               </div>
             </div>
             <div className="col-md-6 d-flex justify-content-center align-items-center">
-              <CryptoBoyNFTImage colors={this.state.userSelectedColors[0]} />
+              <CryptoNftNFTImage colors={this.state.userSelectedColors[0]} />
             </div>
           </div>
           <div className="row">
@@ -420,15 +420,15 @@ class FormAndPreview extends Component {
             </div>
             <div className="col-md-6">
               <div className="form-group">
-                <label htmlFor="cryptoBoyName">Name</label>
+                <label htmlFor="cryptoNftName">Name</label>
                 <input
                   required
                   type="text"
-                  value={this.state.cryptoBoyName}
+                  value={this.state.cryptoNftName}
                   className="form-control"
-                  placeholder="Enter Your Crypto Boy's Name"
+                  placeholder="Enter Your Crypto Nft's Name"
                   onChange={(e) =>
-                    this.setState({ cryptoBoyName: e.target.value })
+                    this.setState({ cryptoNftName: e.target.value })
                   }
                 />
               </div>
@@ -438,12 +438,12 @@ class FormAndPreview extends Component {
                   required
                   type="number"
                   name="price"
-                  id="cryptoBoyPrice"
-                  value={this.state.cryptoBoyPrice}
+                  id="cryptoNftPrice"
+                  value={this.state.cryptoNftPrice}
                   className="form-control"
                   placeholder="Enter Price In Ξ"
                   onChange={(e) =>
-                    this.setState({ cryptoBoyPrice: e.target.value })
+                    this.setState({ cryptoNftPrice: e.target.value })
                   }
                 />
               </div>
@@ -453,7 +453,7 @@ class FormAndPreview extends Component {
                 type="submit"
                 className="btn mt-4 btn-block btn-outline-primary"
               >
-                Mint My Crypto Boy
+                Mint My Trial Test
               </button>
               <div className="mt-4">
                 {this.props.nameIsUsed ? (

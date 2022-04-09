@@ -15,7 +15,7 @@ jobs:
       - name: Install node dependencies
         run: npm install
       - name: Build App
-        run: PUBLIC_URL=/cryptoboys-nft-marketplace npm run build
+        run: PUBLIC_URL=/nft-marketplace-2 npm run build
 
       - name: Deploy App
         uses: peaceiris/actions-gh-pages@v3

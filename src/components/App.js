@@ -2,16 +2,16 @@ import React, { Component } from "react";
 import { HashRouter, Route } from "react-router-dom";
 import "./App.css";
 import Web3 from "web3";
-import CryptoBoys from "../abis/CryptoBoys.json";
+import CryptoNfts from "../abis/CryptoNfts.json";
 
 import FormAndPreview from "../components/FormAndPreview/FormAndPreview";
-import AllCryptoBoys from "./AllCryptoBoys/AllCryptoBoys";
+import AllCryptoNfts from "./AllCryptoNfts/AllCryptoNfts";
 import AccountDetails from "./AccountDetails/AccountDetails";
 import ContractNotDeployed from "./ContractNotDeployed/ContractNotDeployed";
 import ConnectToMetamask from "./ConnectMetamask/ConnectToMetamask";
 import Loading from "./Loading/Loading";
 import Navbar from "./Navbar/Navbar";
-import MyCryptoBoys from "./MyCryptoBoys/MyCryptoBoys";
+import MyCryptoNfts from "./MyCryptoNfts/MyCryptoNfts";
 import Queries from "./Queries/Queries";
 
 const ipfsClient = require("ipfs-http-client");
@@ -27,9 +27,9 @@ class App extends Component {
     this.state = {
       accountAddress: "",
       accountBalance: "",
-      cryptoBoysContract: null,
-      cryptoBoysCount: 0,
-      cryptoBoys: [],
+      cryptoNftsContract: null,
+      cryptoNftsCount: 0,
+      cryptoNfts: [],
       loading: true,
       metamaskConnected: false,
       contractDetected: false,
@@ -56,7 +56,7 @@ class App extends Component {
         lastMintTime: localStorage.getItem(this.state.accountAddress),
       });
       this.state.lastMintTime === undefined || this.state.lastMintTime === null
-        ? (mintBtn.innerHTML = "Mint My Crypto Boy")
+        ? (mintBtn.innerHTML = "Mint My Crypto NFT")
         : this.checkIfCanMint(parseInt(this.state.lastMintTime));
     }
   };
@@ -70,7 +70,7 @@ class App extends Component {
       const diff = countDownTime - now;
       if (diff < 0) {
         mintBtn.removeAttribute("disabled");
-        mintBtn.innerHTML = "Mint My Crypto Boy";
+        mintBtn.innerHTML = "Mint My Trial Test";
         localStorage.removeItem(this.state.accountAddress);
         clearInterval(interval);
       } else {
@@ -108,33 +108,33 @@ class App extends Component {
       this.setState({ accountBalance });
       this.setState({ loading: false });
       const networkId = await web3.eth.net.getId();
-      const networkData = CryptoBoys.networks[networkId];
+      const networkData = CryptoNfts.networks[networkId];
       if (networkData) {
         this.setState({ loading: true });
-        const cryptoBoysContract = web3.eth.Contract(
-          CryptoBoys.abi,
+        const cryptoNftsContract = web3.eth.Contract(
+          CryptoNfts.abi,
           networkData.address
         );
-        this.setState({ cryptoBoysContract });
+        this.setState({ cryptoNftsContract });
         this.setState({ contractDetected: true });
-        const cryptoBoysCount = await cryptoBoysContract.methods
-          .cryptoBoyCounter()
+        const cryptoNftsCount = await cryptoNftsContract.methods
+          .cryptoNftCounter()
           .call();
-        this.setState({ cryptoBoysCount });
-        for (var i = 1; i <= cryptoBoysCount; i++) {
-          const cryptoBoy = await cryptoBoysContract.methods
-            .allCryptoBoys(i)
+        this.setState({ cryptoNftsCount });
+        for (var i = 1; i <= cryptoNftsCount; i++) {
+          const cryptoNft = await cryptoNftsContract.methods
+            .allCryptoNft(i)
             .call();
           this.setState({
-            cryptoBoys: [...this.state.cryptoBoys, cryptoBoy],
+            cryptoNfts: [...this.state.cryptoNfts, cryptoNft],
           });
         }
-        let totalTokensMinted = await cryptoBoysContract.methods
+        let totalTokensMinted = await cryptoNftsContract.methods
           .getNumberOfTokensMinted()
           .call();
         totalTokensMinted = totalTokensMinted.toNumber();
         this.setState({ totalTokensMinted });
-        let totalTokensOwnedByAccount = await cryptoBoysContract.methods
+        let totalTokensOwnedByAccount = await cryptoNftsContract.methods
           .getTotalNumberOfTokensOwnedByAnAddress(this.state.accountAddress)
           .call();
         totalTokensOwnedByAccount = totalTokensOwnedByAccount.toNumber();
@@ -153,18 +153,18 @@ class App extends Component {
   };
 
   setMetaData = async () => {
-    if (this.state.cryptoBoys.length !== 0) {
-      this.state.cryptoBoys.map(async (cryptoboy) => {
-        const result = await fetch(cryptoboy.tokenURI);
+    if (this.state.cryptoNfts.length !== 0) {
+      this.state.cryptoNfts.map(async (cryptoNft) => {
+        const result = await fetch(cryptoNft.tokenURI);
         const metaData = await result.json();
         this.setState({
-          cryptoBoys: this.state.cryptoBoys.map((cryptoboy) =>
-            cryptoboy.tokenId.toNumber() === Number(metaData.tokenId)
+          cryptoNfts: this.state.cryptoNfts.map((cryptoNft) =>
+            cryptoNft.tokenId.toNumber() === Number(metaData.tokenId)
               ? {
-                  ...cryptoboy,
+                  ...cryptoNft,
                   metaData,
                 }
-              : cryptoboy
+              : cryptoNft
           ),
         });
       });
@@ -177,7 +177,7 @@ class App extends Component {
     let colorsUsed = [];
     for (let i = 0; i < colorsArray.length; i++) {
       if (colorsArray[i] !== "") {
-        let colorIsUsed = await this.state.cryptoBoysContract.methods
+        let colorIsUsed = await this.state.cryptoNftsContract.methods
           .colorExists(colorsArray[i])
           .call();
         if (colorIsUsed) {
@@ -187,7 +187,7 @@ class App extends Component {
         }
       }
     }
-    const nameIsUsed = await this.state.cryptoBoysContract.methods
+    const nameIsUsed = await this.state.cryptoNftsContract.methods
       .tokenNameExists(name)
       .call();
     if (colorsUsed.length === 0 && !nameIsUsed) {
@@ -209,14 +209,14 @@ class App extends Component {
         bodyBorderColor,
       } = colors;
       let previousTokenId;
-      previousTokenId = await this.state.cryptoBoysContract.methods
-        .cryptoBoyCounter()
+      previousTokenId = await this.state.cryptoNftsContract.methods
+        .cryptoNftCounter()
         .call();
       previousTokenId = previousTokenId.toNumber();
       const tokenId = previousTokenId + 1;
       const tokenObject = {
-        tokenName: "Crypto Boy",
-        tokenSymbol: "CB",
+        tokenName: "Trial Test",
+        tokenSymbol: "TT",
         tokenId: `${tokenId}`,
         name: name,
         metaData: {
@@ -243,8 +243,8 @@ class App extends Component {
       const cid = await ipfs.add(JSON.stringify(tokenObject));
       let tokenURI = `https://ipfs.infura.io/ipfs/${cid.path}`;
       const price = window.web3.utils.toWei(tokenPrice.toString(), "Ether");
-      this.state.cryptoBoysContract.methods
-        .mintCryptoBoy(name, tokenURI, price, colorsArray)
+      this.state.cryptoNftsContract.methods
+        .mintCryptoNft(name, tokenURI, price, colorsArray)
         .send({ from: this.state.accountAddress })
         .on("confirmation", () => {
           localStorage.setItem(this.state.accountAddress, new Date().getTime());
@@ -265,7 +265,7 @@ class App extends Component {
 
   toggleForSale = (tokenId) => {
     this.setState({ loading: true });
-    this.state.cryptoBoysContract.methods
+    this.state.cryptoNftsContract.methods
       .toggleForSale(tokenId)
       .send({ from: this.state.accountAddress })
       .on("confirmation", () => {
@@ -277,7 +277,7 @@ class App extends Component {
   changeTokenPrice = (tokenId, newPrice) => {
     this.setState({ loading: true });
     const newTokenPrice = window.web3.utils.toWei(newPrice, "Ether");
-    this.state.cryptoBoysContract.methods
+    this.state.cryptoNftsContract.methods
       .changeTokenPrice(tokenId, newTokenPrice)
       .send({ from: this.state.accountAddress })
       .on("confirmation", () => {
@@ -286,9 +286,9 @@ class App extends Component {
       });
   };
 
-  buyCryptoBoy = (tokenId, price) => {
+  buyCryptoNft = (tokenId, price) => {
     this.setState({ loading: true });
-    this.state.cryptoBoysContract.methods
+    this.state.cryptoNftsContract.methods
       .buyToken(tokenId)
       .send({ from: this.state.accountAddress, value: price })
       .on("confirmation", () => {
@@ -335,22 +335,22 @@ class App extends Component {
               <Route
                 path="/marketplace"
                 render={() => (
-                  <AllCryptoBoys
+                  <AllCryptoNfts
                     accountAddress={this.state.accountAddress}
-                    cryptoBoys={this.state.cryptoBoys}
+                    cryptoNfts={this.state.cryptoNfts}
                     totalTokensMinted={this.state.totalTokensMinted}
                     changeTokenPrice={this.changeTokenPrice}
                     toggleForSale={this.toggleForSale}
-                    buyCryptoBoy={this.buyCryptoBoy}
+                    buyCryptoNft={this.buyCryptoNft}
                   />
                 )}
               />
               <Route
                 path="/my-tokens"
                 render={() => (
-                  <MyCryptoBoys
+                  <MyCryptoNfts
                     accountAddress={this.state.accountAddress}
-                    cryptoBoys={this.state.cryptoBoys}
+                    cryptoNfts={this.state.cryptoNfts}
                     totalTokensOwnedByAccount={
                       this.state.totalTokensOwnedByAccount
                     }
@@ -360,7 +360,7 @@ class App extends Component {
               <Route
                 path="/queries"
                 render={() => (
-                  <Queries cryptoBoysContract={this.state.cryptoBoysContract} />
+                  <Queries cryptoNftsContract={this.state.cryptoNftsContract} />
                 )}
               />
             </HashRouter>

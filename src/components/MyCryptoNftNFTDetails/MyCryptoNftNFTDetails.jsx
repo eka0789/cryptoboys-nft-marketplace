@@ -1,6 +1,6 @@
 import React from "react";
 
-const MyCryptoBoyNFTDetails = (props) => {
+const MyCryptoNftNFTDetails = (props) => {
   const {
     tokenId,
     tokenName,
@@ -8,7 +8,7 @@ const MyCryptoBoyNFTDetails = (props) => {
     mintedBy,
     previousOwner,
     numberOfTransfers,
-  } = props.cryptoboy;
+  } = props.cryptoNft;
   return (
     <div key={tokenId.toNumber()} className="mt-4 ml-3">
       <p>
@@ -38,4 +38,4 @@ const MyCryptoBoyNFTDetails = (props) => {
   );
 };
 
-export default MyCryptoBoyNFTDetails;
+export default MyCryptoNftNFTDetails;

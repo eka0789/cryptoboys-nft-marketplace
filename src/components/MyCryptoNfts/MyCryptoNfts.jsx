@@ -1,53 +1,53 @@
 import React, { useState, useEffect } from "react";
-import CryptoBoyNFTImage from "../CryptoBoyNFTImage/CryptoBoyNFTImage";
-import MyCryptoBoyNFTDetails from "../MyCryptoBoyNFTDetails/MyCryptoBoyNFTDetails";
+import CryptoNftNFTImage from "../CryptoNftNFTImage/CryptoNftNFTImage";
+import MyCryptoNftNFTDetails from "../MyCryptoNftNFTDetails/MyCryptoNftNFTDetails";
 import Loading from "../Loading/Loading";
 
-const MyCryptoBoys = ({
+const MyCryptoNfts = ({
   accountAddress,
-  cryptoBoys,
+  cryptoNfts,
   totalTokensOwnedByAccount,
 }) => {
   const [loading, setLoading] = useState(false);
-  const [myCryptoBoys, setMyCryptoBoys] = useState([]);
+  const [myCryptoNfts, setMyCryptoNfts] = useState([]);
 
   useEffect(() => {
-    if (cryptoBoys.length !== 0) {
-      if (cryptoBoys[0].metaData !== undefined) {
+    if (cryptoNfts.length !== 0) {
+      if (cryptoNfts[0].metaData !== undefined) {
         setLoading(loading);
       } else {
         setLoading(false);
       }
     }
-    const my_crypto_boys = cryptoBoys.filter(
-      (cryptoboy) => cryptoboy.currentOwner === accountAddress
+    const my_crypto_Nfts = cryptoNfts.filter(
+      (cryptoNft) => cryptoNft.currentOwner === accountAddress
     );
-    setMyCryptoBoys(my_crypto_boys);
-  }, [cryptoBoys]);
+    setMyCryptoNfts(my_crypto_Nfts);
+  }, [cryptoNfts]);
 
   return (
     <div>
       <div className="card mt-1">
         <div className="card-body align-items-center d-flex justify-content-center">
           <h5>
-            Total No. of CryptoBoy's You Own : {totalTokensOwnedByAccount}
+            Total No. of Trial Test You Own : {totalTokensOwnedByAccount}
           </h5>
         </div>
       </div>
       <div className="d-flex flex-wrap mb-2">
-        {myCryptoBoys.map((cryptoboy) => {
+        {myCryptoNfts.map((cryptoNft) => {
           return (
             <div
-              key={cryptoboy.tokenId.toNumber()}
+              key={cryptoNft.tokenId.toNumber()}
               className="w-50 p-4 mt-1 border"
             >
               <div className="row">
                 <div className="col-md-6">
                   {!loading ? (
-                    <CryptoBoyNFTImage
+                    <CryptoNftNFTImage
                       colors={
-                        cryptoboy.metaData !== undefined
-                          ? cryptoboy.metaData.metaData.colors
+                        cryptoNft.metaData !== undefined
+                          ? cryptoNft.metaData.metaData.colors
                           : ""
                       }
                     />
@@ -56,8 +56,8 @@ const MyCryptoBoys = ({
                   )}
                 </div>
                 <div className="col-md-6 text-center">
-                  <MyCryptoBoyNFTDetails
-                    cryptoboy={cryptoboy}
+                  <MyCryptoNftNFTDetails
+                    cryptoNft={cryptoNft}
                     accountAddress={accountAddress}
                   />
                 </div>
@@ -70,4 +70,4 @@ const MyCryptoBoys = ({
   );
 };
 
-export default MyCryptoBoys;
+export default MyCryptoNfts;

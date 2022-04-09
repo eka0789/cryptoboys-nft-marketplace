@@ -5,18 +5,18 @@ pragma abicoder v2;
 // import ERC721 iterface
 import "./ERC721.sol";
 
-// CryptoBoys smart contract inherits ERC721 interface
-contract CryptoBoys is ERC721 {
+// CryptoNFTs smart contract inherits ERC721 interface
+contract CryptoNfts is ERC721 {
 
   // this contract's token collection name
   string public collectionName;
   // this contract's token symbol
   string public collectionNameSymbol;
-  // total number of crypto boys minted
-  uint256 public cryptoBoyCounter;
+  // total number of crypto nft minted
+  uint256 public cryptoNftCounter;
 
-  // define crypto boy struct
-   struct CryptoBoy {
+  // define crypto nft struct
+   struct CryptoNft {
     uint256 tokenId;
     string tokenName;
     string tokenURI;
@@ -28,8 +28,8 @@ contract CryptoBoys is ERC721 {
     bool forSale;
   }
 
-  // map cryptoboy's token id to crypto boy
-  mapping(uint256 => CryptoBoy) public allCryptoBoys;
+  // map cryptonft's token id to crypto nft
+  mapping(uint256 => CryptoNft) public allCryptoNft;
   // check if token name exists
   mapping(string => bool) public tokenNameExists;
   // check if color exists
@@ -38,19 +38,19 @@ contract CryptoBoys is ERC721 {
   mapping(string => bool) public tokenURIExists;
 
   // initialize contract while deployment with contract's collection name and token
-  constructor() ERC721("Crypto Boys Collection", "CB") {
+  constructor() ERC721("Crypto NFT Collection", "CN") {
     collectionName = name();
     collectionNameSymbol = symbol();
   }
 
-  // mint a new crypto boy
-  function mintCryptoBoy(string memory _name, string memory _tokenURI, uint256 _price, string[] calldata _colors) external {
+  // mint a new crypto nft
+  function mintCryptoNft(string memory _name, string memory _tokenURI, uint256 _price, string[] calldata _colors) external {
     // check if thic fucntion caller is not an zero address account
     require(msg.sender != address(0));
     // increment counter
-    cryptoBoyCounter ++;
+    cryptoNftCounter ++;
     // check if a token exists with the above token id => incremented counter
-    require(!_exists(cryptoBoyCounter));
+    require(!_exists(cryptoNftCounter));
 
     // loop through the colors passed and check if each colors already exists or not
     for(uint i=0; i<_colors.length; i++) {
@@ -62,9 +62,9 @@ contract CryptoBoys is ERC721 {
     require(!tokenNameExists[_name]);
 
     // mint the token
-    _mint(msg.sender, cryptoBoyCounter);
+    _mint(msg.sender, cryptoNftCounter);
     // set token URI (bind token id with the passed in token URI)
-    _setTokenURI(cryptoBoyCounter, _tokenURI);
+    _setTokenURI(cryptoNftCounter, _tokenURI);
 
     // loop through the colors passed and make each of the colors as exists since the token is already minted
     for (uint i=0; i<_colors.length; i++) {
@@ -75,9 +75,9 @@ contract CryptoBoys is ERC721 {
     // make token name passed as exists
     tokenNameExists[_name] = true;
 
-    // creat a new crypto boy (struct) and pass in new values
-    CryptoBoy memory newCryptoBoy = CryptoBoy(
-    cryptoBoyCounter,
+    // creat a new crypto Nft (struct) and pass in new values
+    CryptoNft memory newCryptoNft = CryptoNft(
+    cryptoNftCounter,
     _name,
     _tokenURI,
     msg.sender,
@@ -86,8 +86,8 @@ contract CryptoBoys is ERC721 {
     _price,
     0,
     true);
-    // add the token id and it's crypto boy to all crypto boys mapping
-    allCryptoBoys[cryptoBoyCounter] = newCryptoBoy;
+    // add the token id and it's crypto Nft to all crypto Nfts mapping
+    allCryptoNft[cryptoNftCounter] = newCryptoNft;
   }
 
   // get owner of the token
@@ -132,26 +132,26 @@ contract CryptoBoys is ERC721 {
     require(tokenOwner != address(0));
     // the one who wants to buy the token should not be the token's owner
     require(tokenOwner != msg.sender);
-    // get that token from all crypto boys mapping and create a memory of it defined as (struct => CryptoBoy)
-    CryptoBoy memory cryptoboy = allCryptoBoys[_tokenId];
+    // get that token from all crypto Nfts mapping and create a memory of it defined as (struct => CryptoNft)
+    CryptoNft memory cryptonft = allCryptoNft[_tokenId];
     // price sent in to buy should be equal to or more than the token's price
-    require(msg.value >= cryptoboy.price);
+    require(msg.value >= cryptonft.price);
     // token should be for sale
-    require(cryptoboy.forSale);
+    require(cryptonft.forSale);
     // transfer the token from owner to the caller of the function (buyer)
     _transfer(tokenOwner, msg.sender, _tokenId);
     // get owner of the token
-    address payable sendTo = cryptoboy.currentOwner;
+    address payable sendTo = cryptonft.currentOwner;
     // send token's worth of ethers to the owner
     sendTo.transfer(msg.value);
     // update the token's previous owner
-    cryptoboy.previousOwner = cryptoboy.currentOwner;
+    cryptonft.previousOwner = cryptonft.currentOwner;
     // update the token's current owner
-    cryptoboy.currentOwner = msg.sender;
+    cryptonft.currentOwner = msg.sender;
     // update the how many times this token was transfered
-    cryptoboy.numberOfTransfers += 1;
+    cryptonft.numberOfTransfers += 1;
     // set and update that token in the mapping
-    allCryptoBoys[_tokenId] = cryptoboy;
+    allCryptoNft[_tokenId] = cryptonft;
   }
 
   function changeTokenPrice(uint256 _tokenId, uint256 _newPrice) public {
@@ -163,12 +163,12 @@ contract CryptoBoys is ERC721 {
     address tokenOwner = ownerOf(_tokenId);
     // check that token's owner should be equal to the caller of the function
     require(tokenOwner == msg.sender);
-    // get that token from all crypto boys mapping and create a memory of it defined as (struct => CryptoBoy)
-    CryptoBoy memory cryptoboy = allCryptoBoys[_tokenId];
+    // get that token from all crypto Nfts mapping and create a memory of it defined as (struct => CryptoNft)
+    CryptoNft memory cryptonft = allCryptoNft[_tokenId];
     // update token's price with new price
-    cryptoboy.price = _newPrice;
+    cryptonft.price = _newPrice;
     // set and update that token in the mapping
-    allCryptoBoys[_tokenId] = cryptoboy;
+    allCryptoNft[_tokenId] = cryptonft;
   }
 
   // switch between set for sale and set not for sale
@@ -181,15 +181,15 @@ contract CryptoBoys is ERC721 {
     address tokenOwner = ownerOf(_tokenId);
     // check that token's owner should be equal to the caller of the function
     require(tokenOwner == msg.sender);
-    // get that token from all crypto boys mapping and create a memory of it defined as (struct => CryptoBoy)
-    CryptoBoy memory cryptoboy = allCryptoBoys[_tokenId];
+    // get that token from all crypto Nfts mapping and create a memory of it defined as (struct => CryptoNft)
+    CryptoNft memory cryptonft = allCryptoNft[_tokenId];
     // if token's forSale is false make it true and vice versa
-    if(cryptoboy.forSale) {
-      cryptoboy.forSale = false;
+    if(cryptonft.forSale) {
+      cryptonft.forSale = false;
     } else {
-      cryptoboy.forSale = true;
+      cryptonft.forSale = true;
     }
     // set and update that token in the mapping
-    allCryptoBoys[_tokenId] = cryptoboy;
+    allCryptoNft[_tokenId] = cryptonft;
   }
 }
