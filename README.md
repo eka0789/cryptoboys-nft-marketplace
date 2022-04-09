@@ -41,11 +41,11 @@ ganache-cli --port 7545
 ```
 #### Open new terminal window and clone this repository
 ```
-git clone 
+git clone https://github.com/eka0789/cryptoboys-nft-marketplace.git
 ```
 #### Install dependencies
 ```
-cd 
+cd cryptoboys-nft-marketplace
 npm install
 ```
 #### Compile smart contract
